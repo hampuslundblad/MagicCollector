@@ -5,7 +5,6 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  Label,
 } from "recharts";
 
 const data = [
