@@ -1,4 +1,3 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
 name: Deploy to GitHub Pages Using Vite
 
 on:
@@ -25,13 +24,12 @@ jobs:
   # Single deploy job since we're just deploying
   deploy:
     environment:
-      name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: ../client
+        working-directory: client
 
     steps:
       - run: pwd
@@ -43,7 +41,6 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-          cache-dependency-path: client/package-lock.json
 
       - name: Install dependencies
         run: npm install
