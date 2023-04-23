@@ -35,9 +35,8 @@ jobs:
 
     steps:
       - run: pwd
-      - uses: actions/checkout@v3
       - name: Checkout
-        working-directory: ${{ github.workspace }}/${{ env.PROJECT_PATH }}
+        uses: actions/checkout@v3
 
       - name: Set up Node
         uses: actions/setup-node@v3
@@ -47,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
+        
       - name: Build
         run: npm run build
 
