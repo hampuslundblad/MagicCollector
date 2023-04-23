@@ -27,9 +27,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    env:
+      PROJECT_PATH: client
     defaults:
       run:
-        working-directory: client
+        working-directory: ${{ github.workspace }}/${{ env.PROJECT_PATH }}
 
     steps:
       - run: pwd
