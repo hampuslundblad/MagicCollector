@@ -36,8 +36,8 @@ jobs:
     steps:
       - run: pwd
       - name: Checkout
-        uses: actions/checkout@v3
         working-directory: ${{ github.workspace }}/${{ env.PROJECT_PATH }}
+        uses: actions/checkout@v3
 
       - name: Set up Node
         uses: actions/setup-node@v3
