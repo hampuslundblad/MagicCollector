@@ -12,6 +12,9 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import { addCard, formatMutateQuery } from "../services/add-card-service";
+import { useMutation } from "@apollo/client";
+import { EDIT_COLLECTION } from "../api/queries";
 
 type AddCardDialogProps = {
   isOpen: boolean;
@@ -22,6 +25,10 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
   const [foil, setFoil] = useState("false");
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
+
+
+  const [editCollection, { data, loading, error }] = useMutation(EDIT_COLLECTION );
+
   useEffect(() => setOpen(props.isOpen), [props.isOpen]);
 
   const handleFoilChange = (event: SelectChangeEvent) => {
@@ -39,7 +46,10 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
   };
   const handleAdd = () => {
     handleClose();
-    alert(`${name} , ${quantity} , ${foil}`);
+    const formatedFoil = foil === "true" ? true : false 
+    const query = formatMutateQuery(name, Number(quantity), formatedFoil)
+    console.log(query)
+    editCollection({variables: query})
   };
   return (
     <div>

@@ -14,6 +14,7 @@ type CardTableProps = {
 };
 
 const CardTable = ({ data }: CardTableProps) => {
+  console.log("hej", data)
   const rows = data ?? [];
   return (
     <TableContainer component={Paper}>
@@ -38,7 +39,7 @@ const CardTable = ({ data }: CardTableProps) => {
               </TableCell>
               <TableCell align="right">{row.quantity}</TableCell>
               <TableCell align="right">{row.priceTotal}</TableCell>
-              <TableCell align="right">{row.foil}</TableCell>
+              <TableCell align="right">{JSON.stringify(row.foil)}</TableCell>
               <TableCell align="right">{row.set}</TableCell>
             </TableRow>
           ))}

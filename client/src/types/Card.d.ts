@@ -1,7 +1,7 @@
 export type Card = {
   name: string;
   quantity: number;
-  priceTotal: number;
-  foil: string;
+  priceTotal: string;
+  foil: boolean;
   set: string;
 };
