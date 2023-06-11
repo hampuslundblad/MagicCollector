@@ -1,28 +1,22 @@
-import { gql, useMutation } from "@apollo/client";
-//import { EDIT_COLLECTION } from "../api/queries";
+import { searchCard } from "../api/scryfall"
 
-// export const EDIT_COLLECTION = gql`
-// mutation EditCollection($editCollectionInput: EditCollectionInput, $editCollectionId2: ID!) {
-//   editCollection(editCollectionInput: $editCollectionInput, ID: $editCollectionId2)
-// }`
-
-export function addCard(card: any){
-    // query scryfall for price
-
-    // use graphql query to add card to db.
-    // const [EditCollection, { data, loading, error }] = useMutation(EDIT_COLLECTION );
-    // return {data, loading, error}
-}
-export function formatMutateQuery(name: string, quantity: number, foil: boolean){
+export function formatMutateQuery(name: string, quantity: string, foil: string, price: string){
+    const formatedFoil = foil === "true" ? true : false 
     const query = {
         editCollectionInput : {
             cards : {
                 name : name,
-                quantity : quantity,
-                foil : foil
+                quantity : Number(quantity),
+                foil :  formatedFoil,
+                price: price
+
             }
         },
         editCollectionId2: "64843d01b6603439d2b2af3a",
     }
     return query
+}
+export async function fetchCardPrice(name : string) : Promise<string>{
+    const response = await searchCard(name)
+    return response.price
 }

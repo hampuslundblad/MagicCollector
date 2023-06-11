@@ -38,7 +38,7 @@ const CardTable = ({ data }: CardTableProps) => {
                 {row.name}
               </TableCell>
               <TableCell align="right">{row.quantity}</TableCell>
-              <TableCell align="right">{row.priceTotal}</TableCell>
+              <TableCell align="right">{StringToNumberAndRound(row.priceTotal) * row.quantity}</TableCell>
               <TableCell align="right">{JSON.stringify(row.foil)}</TableCell>
               <TableCell align="right">{row.set}</TableCell>
             </TableRow>
@@ -49,3 +49,7 @@ const CardTable = ({ data }: CardTableProps) => {
   );
 };
 export default CardTable;
+
+function StringToNumberAndRound(string: string){
+  return Math.floor(Number(string) * 100) / 100
+}
