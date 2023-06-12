@@ -13,8 +13,8 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import {
-  addCard,
   fetchCardPrice,
+  fetchCardPriceAndName,
   formatMutateQuery,
 } from "../services/add-card-service";
 import { useMutation } from "@apollo/client";
@@ -50,8 +50,8 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
   };
   const handleAdd = async () => {
     handleClose();
-    const price = await fetchCardPrice(name);
-    const query = formatMutateQuery(name, quantity, foil, price);
+    const response = await fetchCardPriceAndName(name);
+    const query = formatMutateQuery(response.name, quantity, foil, response.price);
     editCollection({ variables: query });
   };
   return (
@@ -61,6 +61,7 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
         <DialogContent>
           <DialogContentText>Name</DialogContentText>
           <Input
+            required
             autoFocus
             margin="dense"
             id="name"
@@ -69,21 +70,18 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
         </DialogContent>
         <DialogContent>
           <DialogContentText>Quantity</DialogContentText>
-          <Input
-            autoFocus
-            margin="dense"
-            id="Quantity"
-            onChange={handleQuantityChange}
-          />
+          <Input margin="dense" id="Quantity" onChange={handleQuantityChange} />
         </DialogContent>
-        <DialogContentText>Foil</DialogContentText>
+        <DialogContent>
+          <DialogContentText>Foil</DialogContentText>
 
-        <FormControl sx={{ mt: 2, minWidth: 120 }} margin="dense">
-          <Select autoFocus value={foil} label="" onChange={handleFoilChange}>
-            <MenuItem value="false">false</MenuItem>
-            <MenuItem value="true">true</MenuItem>
-          </Select>
-        </FormControl>
+          <FormControl sx={{ mt: 2, minWidth: 120 }} margin="dense" required>
+            <Select value={foil} label="" onChange={handleFoilChange}>
+              <MenuItem value="false">false</MenuItem>
+              <MenuItem value="true">true</MenuItem>
+            </Select>
+          </FormControl>
+        </DialogContent>
         <DialogActions>
           <Button onClick={handleAdd}>Add</Button>
           <Button onClick={handleClose}>Cancel</Button>

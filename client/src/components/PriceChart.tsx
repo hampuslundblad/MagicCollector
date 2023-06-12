@@ -7,15 +7,23 @@ import {
   Tooltip,
 } from "recharts";
 
-const data = [
-  { date: "01/01-22", price: 400 },
-  { date: "01/01-22", price: 500 },
-  { date: "01/01-22", price: 800 },
-  { date: "01/01-22", price: 300 },
-  { date: "01/01-22", price: 400 },
+export type PriceChartProps = {
+  priceHistory : [{
+    price: string,
+    date: string,
+  }]
+}
+
+const fallback  = [
+  { date: "01/01-22", price: "400" },
+  { date: "01/01-22", price: "500" },
+  { date: "01/01-22", price: "800" },
+  { date: "01/01-22", price: "300" },
+  { date: "01/01-22", price: "400" },
 ];
 
-const PriceChart = () => {
+const PriceChart = ({priceHistory} : PriceChartProps) => {
+  let data = priceHistory ? priceHistory : fallback
   return (
     <LineChart
       width={600}

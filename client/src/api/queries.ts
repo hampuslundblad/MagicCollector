@@ -24,6 +24,10 @@ query Collection($id: ID!)  {
       price
       set
     }
+    priceHistory {
+      date
+      price
+    }
   }
 }`;
 
@@ -31,3 +35,8 @@ export const EDIT_COLLECTION = gql`
 mutation EditCollection($editCollectionInput: EditCollectionInput, $editCollectionId2: ID!) {
   editCollection(editCollectionInput: $editCollectionInput, ID: $editCollectionId2)
 }`
+export const UPDATE_PRICE_HISTORY = gql`
+mutation EditCollection($id: ID!, $editPriceHistory: PriceHistoryInput) {
+  editPriceHistory(ID: $id, editPriceHistory: $editPriceHistory)
+}
+`

@@ -3,19 +3,11 @@ import CardTable from "./components/CardTable";
 import Header from "./components/Header";
 import PriceChart from "./components/PriceChart";
 import AddCardDialog from "./components/AddCardDialog";
-import { useState } from "react";
-import { useQuery, gql } from "@apollo/client";
-import { GET_COLLECTION, GetCollectionResponse } from "./api/queries";
+import { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import { UPDATE_PRICE_HISTORY, GET_COLLECTION, GetCollectionResponse } from "./api/queries";
 import { Card } from "./types/Card";
-
-type GraphQlCard = {
-  name: string;
-  quantity: number;
-  price : string;
-  foil: boolean;
-  set: string;
-}
-
+import { formatPriceHistoryQuery } from "./services/add-card-service";
 
 
 function createData(
@@ -27,15 +19,14 @@ function createData(
 ) {
   return { name, quantity, priceTotal, foil, set };
 }
-// const rows = [
-//   createData("Savage Knuckleblade", 2, 6.0, "yes", "2x2"),
-//   createData("Nissa, Vital Force", 5, 9.0, "no", "2x2"),
-//   createData("Smuggler's Copter", 10, 16.0, "no", "2x2"),
-//   createData("Meren of Clan Nel Toth", 1, 3.7, "no", "2x2"),
-//   createData("Gingerbread", 1, 16.0, "no", "2x2"),
-// ];
+
 
 function App() {
+  //const [editPriceHistory, { }] = useMutation(UPDATE_PRICE_HISTORY);
+
+  function isDataLoaded() {
+    return !loading && !error
+  }
   const { loading, error, data } = useQuery(GET_COLLECTION, {
     variables: { id: "64843d01b6603439d2b2af3a" },
   });
@@ -47,6 +38,7 @@ function App() {
     setDialogOpen(false);
   };
 
+  
   if (loading) {
     return <div> Loading ... </div>;
   }
@@ -54,14 +46,19 @@ function App() {
     return <div> error </div>;
   } else {
     const cards = parseData(data)
+    console.log(data.collection.priceHistory)
     return (
       <div>
         <Header />
-        <PriceChart />
+        <PriceChart priceHistory={data.collection.priceHistory} />
+        <Button>
+          Update price history
+        </Button>
         <CardTable data={cards} />
         <Button onClick={handleClickOpen} variant="contained">
           Add card
         </Button>
+      
         <AddCardDialog isOpen={dialogOpen} handleClose={handleClickClosed} />
       </div>
     );
@@ -69,7 +66,7 @@ function App() {
 }
 
 function parseData(array: GetCollectionResponse) : Card[] {
-  let result : Card[]= []
+  let result : Card[] = []
   array.collection.cards.forEach(function (card: any) {
     result.push({
       name: card.name,
