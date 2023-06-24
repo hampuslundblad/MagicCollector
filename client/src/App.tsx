@@ -13,7 +13,11 @@ import {
 
 import Spinner from "./components/Spinner/Spinner";
 import { Card } from "./types/Card";
-import EnhancedTable from "./components/DemoTable";
+import EnhancedTable, {
+  DemoTableProps,
+  TableData,
+} from "./components/DemoTable";
+import DemoTable from "./components/DemoTable";
 const ID = "64843d01b6603439d2b2af3a";
 
 function App() {
@@ -51,13 +55,13 @@ function App() {
     );
   } else {
     const cards = parseData(data);
-    console.log(data.collection.priceHistory);
+
     return (
       <div>
         <Header />
         <PriceChart priceHistory={data.collection.priceHistory} />
 
-        <EnhancedTable />
+        <DemoTable data={cards} />
         <div>
           <Button onClick={handleClickOpen} variant="contained">
             Add card
@@ -86,10 +90,11 @@ function App() {
   }
 }
 
-function parseData(array: GetCollectionResponse): Card[] {
-  let result: Card[] = [];
+function parseData(array: GetCollectionResponse): TableData[] {
+  let cards: Card[] = [];
+  let result: TableData[] = [];
   array.collection.cards.forEach(function (card: any) {
-    result.push({
+    cards.push({
       name: card.name,
       quantity: card.quantity,
       priceTotal: card.price,
@@ -97,6 +102,16 @@ function parseData(array: GetCollectionResponse): Card[] {
       foil: card.foil,
     });
   });
+  cards.forEach(function (item) {
+    result.push({
+      name: item.name,
+      quantity: item.quantity,
+      priceTotal: Number((Number(item.priceTotal) * item.quantity).toFixed(2)),
+      set: item.set,
+      foil: `${item.foil}`,
+    });
+  });
+
   return result;
 }
 

@@ -12,10 +12,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import {
-  fetchCardPriceAndName,
-  formatMutateQuery,
-} from "../services/add-card-service";
+import { fetchCardInfo, formatMutateQuery } from "../services/add-card-service";
 import { useMutation } from "@apollo/client";
 import { EDIT_COLLECTION } from "../api/queries";
 import { AxiosError } from "axios";
@@ -51,7 +48,7 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
   };
   const handleAdd = async () => {
     try {
-      const response = await fetchCardPriceAndName(name);
+      const response = await fetchCardInfo(name);
       const query = formatMutateQuery(
         response.name,
         quantity,
