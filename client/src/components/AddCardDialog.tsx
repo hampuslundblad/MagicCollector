@@ -13,12 +13,12 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import {
-  fetchCardPrice,
   fetchCardPriceAndName,
   formatMutateQuery,
 } from "../services/add-card-service";
 import { useMutation } from "@apollo/client";
 import { EDIT_COLLECTION } from "../api/queries";
+import { AxiosError } from "axios";
 
 type AddCardDialogProps = {
   isOpen: boolean;
@@ -29,7 +29,7 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
   const [foil, setFoil] = useState("false");
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
-
+  const [apiError, setApiError] = useState(false);
   const [editCollection, { data, loading, error }] =
     useMutation(EDIT_COLLECTION);
 
@@ -47,16 +47,40 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
   const handleClose = () => {
     props.handleClose();
     setOpen(false);
+    window.location.reload();
   };
   const handleAdd = async () => {
-    handleClose();
-    const response = await fetchCardPriceAndName(name);
-    const query = formatMutateQuery(response.name, quantity, foil, response.price);
-    editCollection({ variables: query });
+    try {
+      const response = await fetchCardPriceAndName(name);
+      const query = formatMutateQuery(
+        response.name,
+        quantity,
+        foil,
+        response.price
+      );
+      await editCollection({ variables: query });
+      console.log(error);
+      handleClose();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        setApiError(true);
+      }
+      return;
+    }
   };
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
+        {error && (
+          <DialogContent>
+            Something went wrong while adding {name} to your collection, please
+            try again
+          </DialogContent>
+        )}
+        {apiError && (
+          <DialogContent>Sorry but couldn't find {name}</DialogContent>
+        )}
+        {loading && <DialogContent> Loading...</DialogContent>}
         <DialogTitle>Add card</DialogTitle>
         <DialogContent>
           <DialogContentText>Name</DialogContentText>
@@ -83,8 +107,10 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAdd}>Add</Button>
-          <Button onClick={handleClose}>Cancel</Button>
+          {!loading && <Button onClick={handleAdd}>Add</Button>}
+          {!loading && <Button onClick={handleClose}>Cancel</Button>}
+          {loading && <Button disabled> Add </Button>}
+          {loading && <Button disabled> Cancel </Button>}
         </DialogActions>
       </Dialog>
     </div>

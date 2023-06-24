@@ -5,10 +5,6 @@ type CardAndPrice = {
   name: string;
   price: string;
 };
-type priceHistory = {
-  price: string;
-  date: string;
-};
 
 export function formatMutateQuery(
   name: string,
@@ -35,7 +31,7 @@ export function formatPriceHistoryQuery(price: string) {
   const query = {
     id: ID,
     editPriceHistory: {
-          price: price,
+      price: price,
     },
   };
   return query;
