@@ -27,8 +27,7 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [apiError, setApiError] = useState(false);
-  const [editCollection, { data, loading, error }] =
-    useMutation(EDIT_COLLECTION);
+  const [editCollection, { loading, error }] = useMutation(EDIT_COLLECTION);
 
   useEffect(() => setOpen(props.isOpen), [props.isOpen]);
 

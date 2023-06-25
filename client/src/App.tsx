@@ -1,5 +1,4 @@
-import { Button, Typography } from "@mui/material";
-import CardTable from "./components/CardTable";
+import { Button } from "@mui/material";
 import Header from "./components/Header";
 import PriceChart from "./components/PriceChart";
 import AddCardDialog from "./components/AddCardDialog";
@@ -10,7 +9,6 @@ import {
   GET_COLLECTION,
   GetCollectionResponse,
   EDIT_QUANTITY,
-  CREATE_COLLECTION,
 } from "./api/queries";
 
 import Spinner from "./components/Spinner/Spinner";
@@ -40,7 +38,7 @@ function App() {
     setDialogOpen(false);
     updateTable();
   };
-  const handleOnEditCard = (value: any) => {
+  const handleOnEditCard = () => {
     setEditDialogOpen(true);
   };
   const handleOnEditClose = () => {
@@ -130,7 +128,7 @@ function App() {
           open={deleteDialogOpen}
           selectedValue={selectedCard}
           handleClose={handleDeleteClose}
-          handleDelete={function (quantity: number): void {
+          handleDelete={function (): void {
             throw new Error("Function not implemented.");
           }}
         />

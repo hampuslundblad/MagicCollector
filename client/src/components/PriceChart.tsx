@@ -30,7 +30,7 @@ const fallback = [
 const PriceChart = ({ priceHistory }: PriceChartProps) => {
   const parsedPriceHistory: PriceHistoryItem[] = [];
   console.log(priceHistory);
-  priceHistory.forEach(function (item, index) {
+  priceHistory.forEach(function (item) {
     const obj = { date: item.date, price: Number(item.price) };
     parsedPriceHistory.push(obj);
   });
