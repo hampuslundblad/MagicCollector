@@ -1,12 +1,22 @@
 import { searchCard } from "../api/scryfall";
 
-const ID = "64843d01b6603439d2b2af3a";
+const ID = "64976654e543b80790c2cf5a";
 type CardInfo = {
   name: string;
   price: string;
   set: string;
   imageUri: string;
 };
+
+export function editQuantityQuery(name: string, quantity: number) {
+  return {
+    editQuantityInput: {
+      name: name,
+      quantity: Number(quantity),
+    },
+    id: ID,
+  };
+}
 
 export function formatMutateQuery(
   name: string,

@@ -15,6 +15,9 @@ import DemoTableHead from "./DemoTableHead";
 
 export interface DemoTableProps {
   data: TableData[];
+  onEditCard: (value: any) => void;
+  onDeleteCard: () => void;
+  handleSelectedCard: (name: string) => void;
 }
 
 export interface TableData {
@@ -24,33 +27,6 @@ export interface TableData {
   foil: string;
   set: string;
 }
-
-function createData(
-  name: string,
-  priceTotal: number,
-  quantity: number,
-  foil: string,
-  set: string
-): TableData {
-  return {
-    name: name,
-    priceTotal,
-    quantity,
-    foil,
-    set,
-  };
-}
-
-// const rows = [
-//   createData("Savage Knuckleblade", 302, 1, "false", "2z2"),
-//   createData("Lightning bolt", 33, 2, "false", "2z2"),
-//   createData("Ulamog, the ceaseless hungerer", 302, 1, "false", "2z2"),
-//   createData("Nissa, Vital Force", 44, 1, "false", "2z2"),
-//   createData("Rishkar's Expertise", 55, 4, "false", "2z2"),
-//   createData("Smuggler's copter", 66, 1, "false", "2z2"),
-//   createData("Damnation", 77, 1, "false", "2z2"),
-//   createData("Living Death", 100, 1, "false", "2z2"),
-// ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -63,37 +39,6 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 }
 
 export type Order = "asc" | "desc";
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
 
 interface HeadCell {
   id: keyof TableData;
@@ -131,12 +76,12 @@ export const headCells: readonly HeadCell[] = [
 
 export default function DemoTable(props: DemoTableProps) {
   const rows = props.data;
+
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof TableData>("priceTotal");
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof TableData
@@ -171,6 +116,7 @@ export default function DemoTable(props: DemoTableProps) {
         selected.slice(selectedIndex + 1)
       );
     }
+    props.handleSelectedCard(newSelected[0]);
 
     setSelected(newSelected);
   };
@@ -204,7 +150,12 @@ export default function DemoTable(props: DemoTableProps) {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <DemoTableToolbar numSelected={selected.length} title={"Cards"} />
+        <DemoTableToolbar
+          numSelected={selected.length}
+          title={"Cards"}
+          onEditCard={props.onEditCard}
+          onDeleteCard={props.onDeleteCard}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -289,4 +240,35 @@ export default function DemoTable(props: DemoTableProps) {
       </Paper>
     </Box>
   );
+}
+
+function getComparator<Key extends keyof any>(
+  order: Order,
+  orderBy: Key
+): (
+  a: { [key in Key]: number | string },
+  b: { [key in Key]: number | string }
+) => number {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
+// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
+// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
+// with exampleArray.slice().sort(exampleComparator)
+function stableSort<T>(
+  array: readonly T[],
+  comparator: (a: T, b: T) => number
+) {
+  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
 }

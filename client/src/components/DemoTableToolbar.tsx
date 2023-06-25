@@ -7,9 +7,11 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 interface DemoTableToolbarProps {
   numSelected: number;
   title: string;
+  onEditCard: (value: any) => void;
+  onDeleteCard: () => void;
 }
 function DemoTableToolbar(props: DemoTableToolbarProps) {
-  const { numSelected, title } = props;
+  const { numSelected, title, onEditCard, onDeleteCard } = props;
 
   return (
     <Toolbar
@@ -48,13 +50,13 @@ function DemoTableToolbar(props: DemoTableToolbarProps) {
         <>
           <div className="mr-4">
             <Tooltip title="Edit">
-              <IconButton>
+              <IconButton onClick={() => onEditCard("edited")}>
                 <ModeEditIcon />
               </IconButton>
             </Tooltip>
           </div>
           <Tooltip title="Delete">
-            <IconButton>
+            <IconButton onClick={() => onDeleteCard()}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>

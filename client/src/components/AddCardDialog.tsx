@@ -44,7 +44,6 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
   const handleClose = () => {
     props.handleClose();
     setOpen(false);
-    window.location.reload();
   };
   const handleAdd = async () => {
     try {
@@ -53,7 +52,8 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
         response.name,
         quantity,
         foil,
-        response.price
+        response.price,
+        response.set
       );
       await editCollection({ variables: query });
       console.log(error);
