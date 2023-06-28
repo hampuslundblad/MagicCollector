@@ -8,8 +8,9 @@ import "@fontsource/roboto/700.css";
 import "./styles/base.css";
 import "./index.css";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-const BASE_URL = "http://13.51.109.101:8080/";
+//const BASE_URL = "http://13.51.109.101:8080/";
 //const BASE_URL = "http://localhost:8080";
+const BASE_URL = "https://hampuslundblad.com";
 const client = new ApolloClient({
   uri: BASE_URL,
   cache: new InMemoryCache(),
