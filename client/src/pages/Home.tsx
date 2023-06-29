@@ -18,6 +18,7 @@ import DemoTable from "../components/DemoTable";
 import EditCardDialog from "../components/EditCardDialog";
 import DeleteCardDialog from "../components/DeleteCardDialog";
 import { editQuantityQuery } from "../services/add-card-service";
+import { useAuth0 } from "@auth0/auth0-react";
 const ID = "64976654e543b80790c2cf5a";
 
 function Home() {
@@ -65,7 +66,6 @@ function Home() {
   if (loading) {
     return (
       <>
-        <Header />
         <Spinner className={`ml-auto mr-auto mt-auto mb-auto`}></Spinner>
       </>
     );
@@ -73,7 +73,6 @@ function Home() {
   if (error) {
     return (
       <>
-        <Header />
         <div> error </div>
         <Button onClick={handleClickOpen} variant="contained">
           Add card
@@ -86,7 +85,6 @@ function Home() {
 
     return (
       <div>
-        <Header />
         <PriceChart priceHistory={data.collection.priceHistory} />
 
         <DemoTable
@@ -100,8 +98,8 @@ function Home() {
             Add card
           </Button>
           <Button
-            onClick={() => {
-              editPriceHistory({
+            onClick={async () => {
+              await editPriceHistory({
                 variables: {
                   id: ID,
                   editPriceHistory: {
