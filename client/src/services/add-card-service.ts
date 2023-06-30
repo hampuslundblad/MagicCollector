@@ -8,17 +8,22 @@ type CardInfo = {
   imageUri: string;
 };
 
-export function editQuantityQuery(name: string, quantity: number) {
+export function editQuantityQuery(
+  email: string,
+  name: string,
+  quantity: number
+) {
   return {
+    email: email,
     editQuantityInput: {
       name: name,
       quantity: Number(quantity),
     },
-    id: ID,
   };
 }
 
-export function formatMutateQuery(
+export function formatEditCollectionQuery(
+  email: string,
   name: string,
   quantity: string,
   foil: string,
@@ -28,6 +33,7 @@ export function formatMutateQuery(
   const formatedFoil = foil === "true" ? true : false;
   const query = {
     editCollectionInput: {
+      email: email,
       cards: {
         name: name,
         quantity: Number(quantity),

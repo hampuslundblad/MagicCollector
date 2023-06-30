@@ -4,10 +4,7 @@ import Home from "./pages/Home";
 import NoMatch from "./pages/NoMatch";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
-import { useAuth0 } from "@auth0/auth0-react";
 import PrivateOutlet from "./routes/PrivateRoute";
-const { isAuthenticated, user } = useAuth0;
-console.log(user);
 function App() {
   return (
     <>

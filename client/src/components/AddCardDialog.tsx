@@ -12,16 +12,21 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { fetchCardInfo, formatMutateQuery } from "../services/add-card-service";
+import {
+  fetchCardInfo,
+  formatEditCollectionQuery,
+} from "../services/add-card-service";
 import { useMutation } from "@apollo/client";
 import { EDIT_COLLECTION } from "../api/queries";
 import { AxiosError } from "axios";
+import { useAuth0 } from "@auth0/auth0-react";
 
 type AddCardDialogProps = {
   isOpen: boolean;
   handleClose: () => void;
 };
 export const AddCardDialog = (props: AddCardDialogProps) => {
+  const { user } = useAuth0();
   const [open, setOpen] = useState(false);
   const [foil, setFoil] = useState("false");
   const [name, setName] = useState("");
@@ -45,23 +50,26 @@ export const AddCardDialog = (props: AddCardDialogProps) => {
     setOpen(false);
   };
   const handleAdd = async () => {
-    try {
-      const response = await fetchCardInfo(name);
-      const query = formatMutateQuery(
-        response.name,
-        quantity,
-        foil,
-        response.price,
-        response.set
-      );
-      await editCollection({ variables: query });
-      console.log(error);
-      handleClose();
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        setApiError(true);
+    if (user?.name != undefined) {
+      try {
+        const response = await fetchCardInfo(name);
+        const query = formatEditCollectionQuery(
+          user.name,
+          response.name,
+          quantity,
+          foil,
+          response.price,
+          response.set
+        );
+        await editCollection({ variables: query });
+        console.log(error);
+        handleClose();
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          setApiError(true);
+        }
+        return;
       }
-      return;
     }
   };
   return (

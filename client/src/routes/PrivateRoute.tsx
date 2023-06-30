@@ -3,10 +3,9 @@ import { FC, PropsWithChildren } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateOutlet: FC = ({ children }: PropsWithChildren<any>) => {
-  const { user, isAuthenticated, isLoading } = useAuth0();
-  console.log(isAuthenticated);
+  const { isAuthenticated, isLoading } = useAuth0();
   if (isLoading) {
-    return <div> Loading ... </div>;
+    return <div> </div>;
   }
 
   return isAuthenticated ? (

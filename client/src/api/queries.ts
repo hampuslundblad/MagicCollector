@@ -12,16 +12,34 @@ export type GetCollectionResponse = {
   };
 };
 
-export const GET_COLLECTION = gql`
-  query Collection($id: ID!) {
-    collection(ID: $id) {
+export const GET_COLLECTION_2 = gql`
+  query Query($email: String!) {
+    collection2(email: $email) {
+      priceHistory {
+        date
+        price
+      }
       cards {
         name
         quantity
         foil
-        imageUrl
         price
         set
+        imageUrl
+      }
+    }
+  }
+`;
+export const GET_COLLECTION = gql`
+  query Query($email: String!) {
+    collection(email: $email) {
+      cards {
+        name
+        quantity
+        foil
+        price
+        set
+        imageUrl
       }
       priceHistory {
         date
@@ -32,24 +50,18 @@ export const GET_COLLECTION = gql`
 `;
 
 export const EDIT_COLLECTION = gql`
-  mutation EditCollection(
-    $editCollectionInput: EditCollectionInput
-    $editCollectionId2: ID!
-  ) {
-    editCollection(
-      editCollectionInput: $editCollectionInput
-      ID: $editCollectionId2
-    )
+  mutation EditCollection($editCollectionInput: EditCollectionInput) {
+    editCollection(editCollectionInput: $editCollectionInput)
   }
 `;
 export const UPDATE_PRICE_HISTORY = gql`
-  mutation EditCollection($id: ID!, $editPriceHistory: PriceHistoryInput) {
-    editPriceHistory(ID: $id, editPriceHistory: $editPriceHistory)
+  mutation Mutation($email: String!) {
+    editPriceHistory(email: $email)
   }
 `;
 export const EDIT_QUANTITY = gql`
-  mutation Mutation($id: ID!, $editQuantityInput: EditQuantityInput) {
-    editQuantity(ID: $id, editQuantityInput: $editQuantityInput)
+  mutation Mutation($email: String!, $editQuantityInput: EditQuantityInput) {
+    editQuantity(email: $email, editQuantityInput: $editQuantityInput)
   }
 `;
 export const CREATE_COLLECTION = gql`

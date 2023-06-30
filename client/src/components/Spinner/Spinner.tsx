@@ -3,7 +3,6 @@ type SpinnerProps = {
   className: string;
 };
 const Spinner = ({ className }: SpinnerProps) => {
-  console.log(className);
   return (
     <div className={"lds-ring " + className}>
       <div></div>

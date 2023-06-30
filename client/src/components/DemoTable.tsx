@@ -89,7 +89,6 @@ export default function DemoTable(props: DemoTableProps) {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-    console.log(event);
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +101,6 @@ export default function DemoTable(props: DemoTableProps) {
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    console.log(event);
     const selectedIndex = selected.indexOf(name);
     let newSelected: readonly string[] = [];
 
@@ -124,7 +122,6 @@ export default function DemoTable(props: DemoTableProps) {
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    console.log(event);
     setPage(newPage);
   };
 

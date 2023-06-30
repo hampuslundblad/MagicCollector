@@ -1,5 +1,4 @@
 import { Button } from "@mui/material";
-import Header from "../components/Header";
 import PriceChart from "../components/PriceChart";
 import AddCardDialog from "../components/AddCardDialog";
 import { useState } from "react";
@@ -11,7 +10,6 @@ import {
   EDIT_QUANTITY,
 } from "../api/queries";
 
-import Spinner from "../components/Spinner/Spinner";
 import { Card } from "../types/Card";
 import { TableData } from "../components/DemoTable";
 import DemoTable from "../components/DemoTable";
@@ -22,12 +20,14 @@ import { useAuth0 } from "@auth0/auth0-react";
 const ID = "64976654e543b80790c2cf5a";
 
 function Home() {
-  const [editPriceHistory, {}] = useMutation(UPDATE_PRICE_HISTORY);
-  const [editCardQuantity, {}] = useMutation(EDIT_QUANTITY);
+  const { user } = useAuth0();
+  console.log(user?.name);
+  const [editPriceHistory] = useMutation(UPDATE_PRICE_HISTORY);
+  const [editCardQuantity] = useMutation(EDIT_QUANTITY);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { loading, error, data } = useQuery(GET_COLLECTION, {
-    variables: { id: ID },
+    variables: { email: user?.name },
   });
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -46,12 +46,13 @@ function Home() {
     setEditDialogOpen(false);
   };
   const handleEditDialog = async (quantity: number) => {
-    console.log(quantity);
-    const query = editQuantityQuery(selectedCard, quantity);
-    const response = await editCardQuantity({ variables: query });
-    if (response?.data.editQuantity) {
-      setEditDialogOpen(false);
-      updateTable();
+    if (user?.name != undefined) {
+      const query = editQuantityQuery(user.name, selectedCard, quantity);
+      const response = await editCardQuantity({ variables: query });
+      if (response?.data.editQuantity) {
+        setEditDialogOpen(false);
+        updateTable();
+      }
     }
   };
   const handleDeleteClose = () => {
@@ -64,11 +65,7 @@ function Home() {
     setSelectedCard(name);
   };
   if (loading) {
-    return (
-      <>
-        <Spinner className={`ml-auto mr-auto mt-auto mb-auto`}></Spinner>
-      </>
-    );
+    return <></>;
   }
   if (error) {
     return (
@@ -84,7 +81,7 @@ function Home() {
     const cards = parseData(data);
 
     return (
-      <div>
+      <main>
         <PriceChart priceHistory={data.collection.priceHistory} />
 
         <DemoTable
@@ -101,10 +98,7 @@ function Home() {
             onClick={async () => {
               await editPriceHistory({
                 variables: {
-                  id: ID,
-                  editPriceHistory: {
-                    price: "123",
-                  },
+                  email: user?.name,
                 },
               });
               updateTable();
@@ -130,14 +124,14 @@ function Home() {
             throw new Error("Function not implemented.");
           }}
         />
-      </div>
+      </main>
     );
   }
 }
 
 function parseData(array: GetCollectionResponse): TableData[] {
-  let cards: Card[] = [];
-  let result: TableData[] = [];
+  const cards: Card[] = [];
+  const result: TableData[] = [];
   array.collection.cards.forEach(function (card: any) {
     cards.push({
       name: card.name,
