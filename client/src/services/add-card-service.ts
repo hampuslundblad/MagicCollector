@@ -1,6 +1,5 @@
 import { searchCard } from "../api/scryfall";
 
-const ID = "64976654e543b80790c2cf5a";
 type CardInfo = {
   name: string;
   price: string;
@@ -42,12 +41,11 @@ export function formatEditCollectionQuery(
         set: set,
       },
     },
-    editCollectionId2: ID,
   };
   return query;
 }
 
-export function formatPriceHistoryQuery(price: string) {
+export function formatPriceHistoryQuery(email: string, price: string) {
   const query = {
     id: ID,
     editPriceHistory: {
